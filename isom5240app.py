@@ -20,3 +20,4 @@ age_predictions = sorted(age_predictions, key=lambda x: x['score'], reverse=True
 # Display results
 print("Predicted Age Range:")
 print(f"Age range: {age_predictions[0]['label']}")
+ 
