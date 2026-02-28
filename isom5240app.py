@@ -8,7 +8,7 @@ st.header("Title: Age Classification using ViT")
 # Load the age classification pipeline
 # The code below should be placed in the main part of the program
 age_classifier = pipeline("image-classification",
-                          model="prithivMLmods/Age-Classification-Set")
+                          model="prithivMLmods/Age-Classification-SigLIP2")
 
 image_name = "middleagedman.jpg"
 image_name = Image.open(image_name).convert("RGB")
