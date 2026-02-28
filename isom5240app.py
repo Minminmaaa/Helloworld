@@ -9,7 +9,7 @@ print("Title: Age Classification using ViT")
 age_classifier = pipeline("image-classification",
                           model="nateraw/vit-age-classifier")
 
-image_name = "middleagedMan.jpg"
+image_name = "middleagedman.jpg"
 image_name = Image.open(image_name).convert("RGB")
 
 # Classify age
