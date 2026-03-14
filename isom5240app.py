@@ -1,24 +1,29 @@
-from transformers import pipeline
-from PIL import Image
 import streamlit as st
+from transformers import pipeline
 
-# Streamlit UI
-st.header("Title: Age Classification using ViT")
+from transformers import AutoModelForSequenceClassification
+from transformers import AutoTokenizer
+import torch
+import numpy as np
 
-# Load the age classification pipeline
-# The code below should be placed in the main part of the program
-age_classifier = pipeline("image-classification",
-                          model="nateraw/vit-age-classifier")
+# Testing with the saved model
+model2 = AutoModelForSequenceClassification.from_pretrained("CustomModel_yelp",
+                                                            num_labels=5)
+tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 
-image_name = "middleagedman.jpg"
-image_name = Image.open(image_name).convert("RGB")
+# Tokenized testing data
+label = 4 # label = 4
+text = "dr. goldberg offers everything i look for in a general practitioner. he's nice and easy to talk to without being patronizing; he's always on time in seeing his patients; he's affiliated with a top-notch hospital (nyu) which my parents have explained to me is very important in case something happens and you need surgery; and you can get referrals to see specialists without having to see him first. really, what more do you need? i'm sitting here trying to think of any complaints i have about him, but i'm really drawing a blank."
+inputs = tokenizer(text,
+                   padding=True,
+                   truncation=True,
+                   return_tensors='pt')
 
-# Classify age
-age_predictions = age_classifier(image_name)
-st.write(age_predictions)
-age_predictions = sorted(age_predictions, key=lambda x: x['score'], reverse=True)
+outputs = model2(**inputs)
+predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
+predictions = predictions.cpu().detach().numpy()
 
-# Display results
-st.write("Predicted Age Range:")
-st.write(f"Age range: {age_predictions[0]['label']}") 
- 
+# Get the index of the largest output value
+max_index = np.argmax(predictions)
+
+print(f"The label is {label} and the predicted label is {max_index}")
